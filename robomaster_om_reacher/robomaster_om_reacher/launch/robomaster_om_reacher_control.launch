@@ -1,0 +1,33 @@
+<launch>
+    <!-- 네임스페이스 정의 -->
+    <arg name="manipulator_ns" default="open_manipulator" />
+    <arg name="robomaster_ns" default="robomaster" />
+
+    <!-- 공통 controller.yaml 로드 -->
+    <rosparam file="$(find robomaster_om_description)/config/controller.yaml" command="load"/>
+    
+
+    <!-- open manipulator controllers -->
+    <node name="manipulator_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+          args="open_manipulator_joint_state_controller open_manipulator_arm_controller">
+        <remap from="/controller_manager/load_controller" to="$(arg manipulator_ns)/controller_manager/load_controller"/>
+        <remap from="/controller_manager/switch_controller" to="$(arg manipulator_ns)/controller_manager/switch_controller"/>
+        <remap from="/controller_manager/unload_controller" to="$(arg manipulator_ns)/controller_manager/unload_controller"/>
+    </node>
+
+    <!-- robomaster controllers -->
+    <node name="robomaster_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen"
+          args="robomaster_joint_state_controller robomaster_right_front_wheel_controller robomaster_left_front_wheel_controller robomaster_right_rear_wheel_controller robomaster_left_rear_wheel_controller">
+        <remap from="/controller_manager/load_controller" to="$(arg robomaster_ns)/controller_manager/load_controller"/>
+        <remap from="/controller_manager/switch_controller" to="$(arg robomaster_ns)/controller_manager/switch_controller"/>
+        <remap from="/controller_manager/unload_controller" to="$(arg robomaster_ns)/controller_manager/unload_controller"/>
+    </node>
+
+    <!-- Robot State Publisher -->
+    <node name="manipulator_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+        <remap from="/joint_states" to="$(arg manipulator_ns)/joint_states" />
+    </node>
+    <node name="robomaster_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+        <remap from="/joint_states" to="$(arg robomaster_ns)/joint_states" />
+    </node>
+</launch>

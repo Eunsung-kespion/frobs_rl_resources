@@ -1,0 +1,5 @@
+<launch>
+
+    <node name="uav_tf2_broadcaster" pkg="uav_trajectory_pred" type="uav_tf2_broadcaster.py" output="screen"/>
+
+</launch>

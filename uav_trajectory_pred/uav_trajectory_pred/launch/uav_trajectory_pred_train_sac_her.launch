@@ -1,0 +1,11 @@
+<launch>
+  <!-- Wandb parameters -->
+  <arg name="wandb_project_name" default="uav_trajectory_predict"/>
+  <arg name="wandb_entity" default=""/>
+  
+  <node name="uav_tf2_broadcaster" pkg="uav_trajectory_pred" type="uav_tf2_broadcaster.py" output="screen"/>
+  
+  <node name="train_uav_trajectory_pred" pkg="uav_trajectory_pred" type="train_sac_her.py" output="screen"/>
+
+  <env name="ROS_LOG_DIR" value="/root/catkin_ws/src/frobs_rl_resources/uav_trajectory_pred/uav_trajectory_pred/src/uav_trajectory_pred/logs"/>
+</launch>

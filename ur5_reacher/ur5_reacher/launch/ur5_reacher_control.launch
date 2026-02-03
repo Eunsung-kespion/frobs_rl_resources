@@ -1,0 +1,19 @@
+<launch>
+    <arg name="ns" default="" />
+     <!-- Load joint controller configurations from YAML file to parameter server -->
+    <rosparam file="$(find ur5_description)/config/controller.yaml" command="load" ns="$(arg ns)"/>
+    <arg name="joint_state_controller" default="joint_state_controller" />
+    <arg name="arm_controller" default="arm_controller" />
+    <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+          output="screen" ns="$(arg ns)" args="$(arg joint_state_controller) $(arg arm_controller)" /> -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner.py" respawn="false" output="screen" args="$(arg joint_state_controller) $(arg arm_controller)">  <!-- Correct pkg and type -->
+        <!-- <param name="robot_description" command="$(find xacro)/xacro.py '$(find ur5_description)/urdf/ur5_robot.urdf.xacro'" /> -->
+        <remap from="/controller_manager/load_controller" to="$(arg ns)/controller_manager/load_controller"/>
+        <remap from="/controller_manager/switch_controller" to="$(arg ns)/controller_manager/switch_controller"/>
+        <remap from="/controller_manager/unload_controller" to="$(arg ns)/controller_manager/unload_controller"/>
+  </node>
+  <!-- Robot state publisher node -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+        <remap from="/joint_states" to="$(arg ns)/joint_states" />
+    </node>
+</launch>

@@ -1,0 +1,115 @@
+robomaster_om: #namespace
+
+    #--- Task Related parameters
+    n_actions_om: 6 # The actions are the joint positions
+    n_actions_robomaster: 3 # linear velocity in x, y and angular velocity in z
+    # TODO -> n_obs를 어떻게 바꿀까
+    n_observations: 12 # The observations are XYZ positions of the TCP and the distance to GOAL 
+    max_steps: 2000000000 # Maximum number of steps in the environment  
+
+    #-----------------------------------------------------------------------------------------#
+    #--- Action Space
+
+    # Define min and max joint values to define 
+    min_joint_pos: # pi is 3.141592653589793
+      -  -3.0
+      - -2.05
+      - -1.9
+      - -3.0
+      - -1.8
+      - -3.0
+
+    max_joint_pos:
+      - 3.0
+      - 2.1
+      - 2.16
+      - 3.0
+      - 1.9
+      - 3.0
+    
+    min_joint_vel: # TODO 임시로 joint_pos의 값으로 설정
+      - -3.141592653589793 
+      - -2.05
+      - -1.9
+      - -3.141592653589793
+      - -1.98
+      - -3.141592653589793 
+
+    max_joint_vel: 
+      - -3.141592653589793 
+      - -2.05
+      - -1.9
+      - -3.141592653589793
+      - -1.98
+      - -3.141592653589793 
+  
+    
+
+    robomaster_min_vel_value: # from dji robomaster document
+      lin_x: -0.50 # linear velocity in x
+      lin_y: -0.50 # linear velocity in y
+      ang_z: -0.50 # angular velocity in z
+      
+    robomaster_max_vel_value: 
+      lin_x: 0.50 # linear velocity in x
+      lin_y: 0.50 # linear velocity in y
+      ang_z: 0.50 # angular velocity in z
+
+    #-----------------------------------------------------------------------------------------#
+    #--- Observation Space # TODO -> 이거 어떻게 바꿀까
+    
+    # Set
+    position_ee_max: # Maximum XYZ position for the EE
+      x: 7.0 
+      y: 7.0
+      z: 0.45
+    position_ee_min: # Minimum XYZ position for the EE
+      x: -7.0
+      y: -7.0
+      z: 0.1
+
+    position_goal_max: # Maximum XYZ position for the goal
+      x: 9.0
+      y: 5.0
+      z: 1.3
+    position_goal_min: # Minimum XYZ position for the goal
+      x:  8.5
+      y:  -5.0
+      z:  0.45
+      
+    max_distance:     8.0 # Maximum distance from EE to the desired GOAL EE
+
+    #-----------------------------------------------------------------------------------------#
+    #--- Simulation parameters
+    
+    time_step: 0.01 # 0.01
+    update_rate_multiplier: 40.0 # If training multiply the max update rate by this number 
+    
+    #-----------------------------------------------------------------------------------------#
+    #--- Set goal EE pos
+    
+    goal_ee_pos: 
+      x: 2.0
+      y: 2.0
+      z: 2.0
+
+    tolerance_goal_pos: 0.2 # Tolerance for the position of the goal
+
+    training: True
+    pos_dynamic: False
+    pos_dynamic_params:
+      x_max_amplitude: 0.1
+      y_max_amplitude: 0.1
+      z_max_amplitude: 0.1
+      x_max_freq: 0.01
+      y_max_freq: 0.01
+      z_max_freq: 0.01
+
+    #-----------------------------------------------------------------------------------------#
+    #--- Set variables related to rewards
+    
+    step_reward: -0.05 # 2/26 -0.1 -> -0.05
+    multiplier_dist_reward: 0.2 # 3/11 0.8 -> 0.2
+    reached_goal_reward: 1000.0
+    joint_limits_reward: -10.0
+    arrow_scale_reward: 0.1 # if arrow scale is smaller than previous time step, reward is given 

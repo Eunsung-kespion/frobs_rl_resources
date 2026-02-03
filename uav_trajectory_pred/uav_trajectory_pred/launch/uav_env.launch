@@ -1,0 +1,7 @@
+<launch>
+    <arg name="namespace" default="env_0" />
+
+    <group ns="$(arg namespace)">
+        <node name="uav_tf2_broadcaster" pkg="uav_trajectory_pred" type="uav_tf2_broadcaster.py" output="screen"/>
+    </group>
+</launch>

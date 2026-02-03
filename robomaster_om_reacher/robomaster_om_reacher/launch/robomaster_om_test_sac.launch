@@ -1,0 +1,21 @@
+<launch>
+  <!-- <arg name="num_robots" default="10"/> -->
+  <arg name="model" default="$(find robot_description)/robot/robot_description.urdf.xacro"/>
+  
+  <!-- Wandb parameters -->
+  <arg name="wandb_project_name" default="robomaster_om_reacher"/>
+  <arg name="wandb_entity" default=""/>
+
+  <!-- Load the urdf into the parameter server. -->
+  <arg name="robot_xacro" value="$(find robot_description)/robot/robot_description.urdf.xacro" />
+  <param name="robot_description" command="$(find xacro)/xacro $(arg robot_xacro)" />
+
+  <node name="laser_scan_to_matrix_publisher" pkg="robomaster_om_reacher" type="scan_to_obs_matrix.py" output="screen"/>
+  <node name="laser_scan_distance_checker" pkg="robomaster_om_reacher" type="laser_scan_distance_check.py" output="screen"/>
+  <include file='$(find robot_launch)/launch/odom_pub.launch'/>
+  <include file="$(find commander)/launch/commander.launch"/>
+  
+  <node name="train_robomaster_om" pkg="robomaster_om_reacher" type="test_model.py" output="screen"/>
+
+  <env name="ROS_LOG_DIR" value="/root/catkin_ws/src/frobs_rl_resources/robomaster_om_reacher/robomaster_om_reacher/src/robomaster_om_reacher/logs"/>
+</launch>
